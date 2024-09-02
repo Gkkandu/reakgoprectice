@@ -1,0 +1,52 @@
+{{define "addForm"}}
+<html>
+    <body>
+        <form id="addForm" method="POST" action="/register">
+            Name : <input type="text" name="name" autocomplete="name" /><br />
+            Address : <input type="text" name="address" autocomplete="address-line1" /><br />
+            Email : <input type="email" name="email" autocomplete="email" /><br />
+            Password : <input type="password" name="password" autocomplete="current-password"><br />
+            <button type="submit">Submit</button>
+        </form>
+        
+
+        <script>
+            document.getElementById('addForm').addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent form from submitting the traditional way
+        
+                const formData = new FormData(this);
+        
+                // Constructing a JSON object from form data
+                const data = {
+                    name: formData.get('name'),
+                    address: formData.get('address'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                };
+        
+                try {
+                    const response = await fetch('/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data) // Use the data constructed from formData
+                    });
+        
+                    // Convert response to text or JSON
+                    const responseText = await response.text(); // or await response.json() if JSON is returned
+        
+                    if (response.ok) {
+                        alert('Form submitted successfully!');
+                    } else {
+                        alert('Form submission failed. Response: ' + responseText);
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            });
+        </script>
+        
+    </body>
+</html>
+{{end}}
